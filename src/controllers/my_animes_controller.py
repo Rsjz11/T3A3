@@ -1,7 +1,7 @@
 from models.My_Anime import My_Anime
 from models.Profile import Profile
 from main import db
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, jsonify, abort, render_template
 from schemas.My_AnimeSchema import My_Animes_schema, my_anime_schema
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
@@ -21,8 +21,8 @@ def get_anime_titles():                                                         
         return abort(401, description="Invalid profile")
 
     animes = My_Anime.query.filter_by(profile_id_fk=user.id).all()
-    return jsonify(my_animes_schema.dump(animes))
-
+    # return jsonify(my_animes_schema.dump(animes))
+    return render_template("My_Anime.html", animes=animes)
 
 @my_anime.route("/recent", methods=["GET"])
 @jwt_required
@@ -33,7 +33,8 @@ def get_recently_watched_anime():                                               
         return abort(401, description="Invalid profile")
 
     animes = My_Anime.query.filter_by(profile_id_fk=user.id).order_by(My_Anime.anime_started.desc()).limit(3).all()
-    return jsonify(my_animes_schema.dump(journals))
+    # return jsonify(my_animes_schema.dump(animes))
+    return render_template("My_Anime.html", animes=animes)
 
 
 @my_anime.route("/", methods=["POST"])
@@ -53,20 +54,20 @@ def anime_title_create():                                                       
     db.session.add(new_anime)
     db.session.commit()
 
-    return jsonify(my_anime_schema.dump(new_anime))
-
+   # return jsonify(my_anime_schema.dump(new_anime))
+    return render_template("My_Anime.html", new_anime=new_anime)
 
 @my_anime.route("/<int:id>", methods=["GET"])
 @jwt_required
-def get_anime_title_show(id):                                                                    # Returns a single journal entry
+def get_anime_title_show(id):                                                                    # Returns a single anime title
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user:
         return abort(401, description="Invalid profile")
 
     animes = Anime.query.filter_by(id=id, profile_id_fk=user.id).first()
-    return jsonify(my_anime_schema.dump(animes))
-
+    # return jsonify(my_anime_schema.dump(animes))
+    return render_template("My_Anime.html", animes=animes)
 
 @my_anime.route("/<int:year>/<int:month>/<int:day>", methods=["GET"])                       # Returns anime entries for a selected date
 @jwt_required
@@ -114,4 +115,5 @@ def anime_title_delete(id):                                                     
     db.session.delete(My_Anime)
     db.session.commit()
 
-    return jsonify(My_Anime_schema.dump(My_Anime))
+    # return jsonify(My_Anime_schema.dump(My_Anime))
+    return render_template("My_Anime.html", My_Anime=My_Anime

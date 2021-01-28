@@ -3,7 +3,7 @@ from flask import Blueprint                                     # Use blueprints
 
 db_commands = Blueprint("db-custom", __name__)                  # Creating the blueprint
 
-@db_commands.cli.command("drop")                                # this fronction will run when "flask db-custom drop" is run"
+@db_commands.cli.command("drop")                                # this function will run when "flask db-custom drop" is run"
 def drop_db():
     db.drop_all()                                               # Drop all tables  
     db.engine.execute("DROP TABLE IF EXISTS alembic_version;")  # Drop table for migrations
@@ -11,10 +11,12 @@ def drop_db():
 
 
 
-@db_commands.cli.command("seed")                                # this fronction will run when "flask db-custom seed" is run"
-def seed_db():
-    from models.User import User                          # Importing the User model
+@db_commands.cli.command("seed")                                # this function will run when "flask db-custom seed" is run"
+def seed_db():                                                  # Models are connected to the commands below
+    from models.User import User                                # Importing the User model
     from models.Profile import Profile                          # Importing the Profile model
+    from models.My_Anime import My_Anime                        # Importing My_Anime model
+    from models.ProfileImage import ProfileImage                # Importing ProfileImage model
     from main import bcrypt                                     # Hashing module for the passwords
     from faker import Faker                                     # Importing the faker module for fake data
     import random                                               # Importing random from the python standard library
@@ -28,18 +30,29 @@ def seed_db():
         user.password = bcrypt.generate_password_hash("123456").decode("utf-8") # Assign ta hashed password to the user object
         db.session.add(user)                                                    # Add the user to the db session
         users.append(user)                                                      # Append the user to the users list
+        print(user)
 
     db.session.commit()                                                         # Commit the seeion to the db 
 
-    for i in range(5):
-        profile = Profile()                                                     # Create a profile object from the Profile model                 
+    Profiles = []
 
-        profile.username = faker.first_name()                                   # Add a username to the profile object
-        profile.firstname = faker.first_name()                                  # Add a firstname to the profile object
-        profile.lastname = faker.last_name()                                    # Add a lastname to the profile object
-        profile.user_id = users[i].id                                           # Add a user_id to the profile object. This comes from real ids from the users list
+    for i in range(1,6):
+        client = Client()
+        client.username = f"username{i}"
+        client.fname = f"firstname{i}"
+        client.lname = f"lastname{i}"
+        clients.append(client)
+        client.user_id = users[i-1].id
+        db.session.add(client)
+        print(client)
 
-        db.session.add(profile)                                                 # Add the profile to the session
+    db.session.commit()  
 
-    db.session.commit()                                                         # Commit the session to the database
-    print("Tables seeded")                                                      # Print a message to let the user know they 
+    for i in range(1, 11):
+        anime = My_Anime()
+        anime.anime_titles = faker.catch_phrase()
+        anime.profile_id_fk = random.choice(profiles).id
+        db.session.add(anime)
+
+    db.session.commit()
+    print("Tables seeded")

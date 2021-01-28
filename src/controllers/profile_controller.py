@@ -1,7 +1,7 @@
 
-from main import db                                                    # This is the db instance created by SQLAlchemy
-from flask import Blueprint, request, jsonify, abort                   # Import flask and various sub packages
-from schemas.ProfileSchema import profile_schema, profiles_schema      # Importing the Profile Schema
+from main import db                                                                     # This is the db instance created by SQLAlchemy
+from flask import Blueprint, request, jsonify, abort, render_template                   # Import flask and various sub packages
+from schemas.ProfileSchema import profile_schema, profiles_schema                       # Importing the Profile Schema
 from schemas.My_AnimeSchema import My_Animes_schema, My_Anime_schema   # Importing the My_Anime Schema
 from flask_jwt_extended import jwt_required, get_jwt_identity          # Packages for authorization via JWTs
 from models.Profile import Profile                                     # Importing the Profile Model
@@ -38,8 +38,9 @@ def profile_create(user):
         db.session.add(new_profile)
         db.session.commit()
         
-        return jsonify(client_schema.dump(new_profile))
-    
+        #return jsonify(client_schema.dump(new_profile))
+        return render_template("Profile.html", new_profile=new_profile)
+
     else:
         return abort(401, description='Profile already exists')
 
@@ -53,7 +54,8 @@ def get_profile_details():                                            # function
 
     details = Profile.query.filter_by(id=user.id).first()
 
-    return jsonify(profile_schema.dump(details))
+    #return jsonify(profile_schema.dump(details))
+    return render_template("Profile.html", details=details)
 
 @profiles.route("/", methods=["PUT", "PATCH"])
 @jwt_required
@@ -75,6 +77,6 @@ def profile_details_update():
 def profile_index():                                                   
                                                       
     profiles = Profile.query.options(joinedload("user")).all()         # Retrieving all profiles from the db
-    return jsonify(profiles_schema.dump(profiles))                     # Returning all the profiles in json
-
+   # return jsonify(profiles_schema.dump(profiles))                     # Returning all the profiles in json
+    return render_template("Profile.html", profiles=profiles)
     

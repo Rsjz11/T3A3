@@ -1,0 +1,18 @@
+{% extends "my_anime.html" %}
+
+{% block content %}
+    {% for book in books %}
+    <div class="col px-md-5"><div class="p-3 border bg-light">
+                <div class="card" >
+                    <div class="card-body">
+                        <h5 class="card-title">{{anime.title}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{Welcome! Or ようこそ!}} </h6>
+                        <p class="card-text">This is the page where you will be able to record all the animes you have watched and compete with your friends to find out who amongst you are truly worthy to known as a weeb!.</p>
+                        <a href="#" class="card-link">main_page.html</a>
+                        <a href="#" class="card-link">profile.html</a>
+                    </div>
+                </div>
+            </div>
+    </div>
+    {% endfor %}
+{% endblock %}
