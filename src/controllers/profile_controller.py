@@ -71,21 +71,6 @@ def profile_details_update():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @profiles.route("/", methods=["GET"])                                  
 def profile_index():                                                   
                                                       

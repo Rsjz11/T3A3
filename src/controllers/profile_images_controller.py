@@ -1,11 +1,12 @@
-from flask import Blueprint, request, abort, current_app, Response
-from flask_jwt_extended import jwt_required
-from models.Client import Client
-from models.ProfileImage import ProfileImage
 import boto3
 from main import db
 from pathlib import Path
 from flask_jwt_extended import get_jwt_identity
+from flask import Blueprint, request, abort, current_app, Response
+from flask_jwt_extended import jwt_required
+from models.Client import Client
+from models.ProfileImage import ProfileImage
+
 
 
 profile_images = Blueprint("profile_images",  __name__, url_prefix="/profile/<int:user_id>/image")
@@ -15,9 +16,9 @@ profile_images = Blueprint("profile_images",  __name__, url_prefix="/profile/<in
 @jwt_required
 def profile_image_create(user_id):
     user_id = get_jwt_identity()
-    user = Client.query.get(user_id)
+    user = Profile.query.get(user_id)
     if not user:
-        return abort(401, description="Invalid user")
+        return abort(401, description="Invalid profile")
 
     if "image" not in request.files:
         return  abort(400, description="No Image")
@@ -46,13 +47,13 @@ def profile_image_create(user_id):
 @jwt_required
 def profile_image_show(user_id):
     user_id = get_jwt_identity()
-    user = Client.query.get(user_id)
+    user = Profile.query.get(user_id)
     if not user:
-        return abort(401, description="Invalid user")
+        return abort(401, description="Invalid profile")
 
     print(user.id)
 
-    profile_image = ProfileImage.query.filter_by(client_id=user.id).first()
+    profile_image = ProfileImage.query.filter_by(profile_id=user.id).first()
 
     print(profile_image)
 
@@ -77,12 +78,12 @@ def profile_image_delete(user_id):
     user_id = get_jwt_identity()
     user = Client.query.get(user_id)
     if not user:
-        return abort(401, description="Invalid user")
+        return abort(401, description="Invalid profile")
 
     profile = ProfileImage.query.filter_by(client_id=user.id).first()
 
     if not profile:
-        return abort(401, description="Invalid user")
+        return abort(401, description="Invalid profile")
 
     bucket = boto3.resource("s3").Bucket(current_app.config["AWS_S3_BUCKET"])
     filename = profile.filename
