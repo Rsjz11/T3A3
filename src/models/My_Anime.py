@@ -9,8 +9,8 @@ class My_Anime(db.Model):                                                       
 
     id = db.Column(db.Integer, primary_key=True)                                                                                     # column id, integer set onto a primary key, must be unique
     anime_title = db.Column(db.String())                                                                                             # anime title, string
-    anime_started = db.Column(db.DateTime, default=datetime.now)                                                                     # anime started, date
-    anime_finished = db.Column(db.DateTime, default=datetime.now)                                                                    # anime finished, date
+    anime_started = db.Column(db.DateTime, default=datetime.fromisoformat)                                                                     # anime started, date
+    anime_finished = db.Column(db.DateTime, default=datetime.fromisoformat)                                                          # anime finished, date
     rating /100 = db.Column(db.Integer())                                                                                            # anime rating out of 100, integer
     profile_id_fk = db.Column(db.Integer, db.ForeignKey("profile.id"), nullable=False)                                               # foreign key linked to Profile, integer, must be present
 
