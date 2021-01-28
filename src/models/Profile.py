@@ -6,7 +6,7 @@ from models.ProfileImage import ProfileImage
 class Profile(db.Model):                                                             # Creating a Profile class inheriting from db.Model
     __tablename__ = "profiles"                                                       # Explicitally providing the name of the table
 
-    id = db.Column(db.Integer, primary_key=True)                                     # Creates a column called id and sets it al the primary key
+    id = db.Column(db.Integer, primary_key=True)                                     # Creates a column called id and sets it on the primary key
     username = db.Column(db.String(), nullable=False, unique=True)                   # Profilename, string, must be present, must be unique
     fname = db.Column(db.String(), nullable=False)                                   # Firstname, string, must be present
     lname = db.Column(db.String(), nullable=False)                                   # Lastname, string, must be present
