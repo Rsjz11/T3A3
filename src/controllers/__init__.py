@@ -1,10 +1,11 @@
-# When you import a directory but you havent given a specific file name then it will import __init__.py by default
-
-
-from controllers.user_controller import user                 # Importing the user blueprint
-from controllers.profile_controller import profiles          # Importing the profile blueprint
+from controllers.my_animes_controller import my_anime               # importing the my_anime blueprint
+from controllers.auth_controller import auth                        # importing the authentication blueprint (user)
+from controllers.profile_images_controller import profile_images    # importing the profile images blueprint
+from controllers.user_controller import user                        # importing the user blueprint 
 
 registerable_controllers = [
-    user,
+    auth,
+    my_anime,
+    profile_images,
     profiles
 ]
