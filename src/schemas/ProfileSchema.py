@@ -8,8 +8,8 @@ class ProfileSchema(ma.SQLAlchemyAutoSchema):                         # Generate
         model = Profile                                               # Generate Schema using the Profile Model
 
     username = ma.String(required=True, validate=Length(min=1))       # username is required and the minimum length is 1
-    firstname = ma.String(required=True, validate=Length(min=1))      # first_name is required and the minimum length is 1
-    lastname = ma.String(required=True, validate=Length(min=1))       # last_name is required and the minimum length is 1
+    fname = ma.String(required=True, validate=Length(min=1))          # first name is required and the minimum length is 1
+    lname = ma.String(required=True, validate=Length(min=1))          # last name is required and the minimum length is 1
     user = ma.Nested(UserSchema)                                      # Nesting the user schema in the profile Schema
 
 profile_schema = ProfileSchema()                                      # Schema for a single profile
